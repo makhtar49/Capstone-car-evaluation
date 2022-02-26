@@ -263,7 +263,7 @@ accmat
 ``` 
 #  Knn_Model with caret package to tuning parameter 
 ```{r chunk_9, message=FALSE, warning=FALSE} 
-train_knn<-train(class_pred_train,class_outcome_train, method="knn",tuneGrid=data.frame(k=seq(1, sqrt(N),1))) 
+train_knn<-train(class_pred_train,class_outcome_train, method="knn",tuneGrid=data.frame(k=seq(1, sqrt(sample_size),1))) 
 k<-train_knn$bestTune 
 class_pred_knn<-knn(train=class_pred_train,test=class_pred_test,cl=class_outcome_train, k) 
 #Model Evaluation 
