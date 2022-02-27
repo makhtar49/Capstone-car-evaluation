@@ -251,16 +251,16 @@ accmat
 #===================================================
 # Knn_Model with caret package to pick k 
 #================================================
-train_knn<-train(class_pred_train,class_outcome_train, method="knn", 
-                 tuneGrid=data.frame(k=seq(1, floor(sqrt(sample_size)),1))) 
-k<-train_knn$bestTune
+train_knn<-train(class_pred_train,class_outcome_train, method = "knn",preProcess =c("center","scale"))
+train_knn
+k=train_knn$bestTune
 
 class_pred_knn<-knn(train=class_pred_train,test=class_pred_test,cl=class_outcome_train, k)
 #==================
 #Model Evaluation
 #=======================
 accuracy_with_caret<-confusionMatrix(class_pred_knn,factor(class_outcome_test))$overall["Accuracy"]
-k
+
 accuracy_with_caret
 #=====================================
 #Display accuracy matrix
@@ -303,7 +303,7 @@ rf_class_pred<-predict(rf,class_pred_test)
 accuracy_rf<-confusionMatrix(rf_class_pred,factor(class_outcome_test))$overall["Accuracy"] 
 accuracy_rf 
 #======================================
-#Display Accuracy Matrix
+#Display of accuracy matrix
 #===============================
 accmat<-table("pred" =  rf_class_pred, "class_labels" = factor(class_outcome_test))
 accmat
