@@ -16,15 +16,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ## About this project
 This machine learning project is about creating a car evaluation system using the
 car data from the archive of University of California, Irvine. The goal is to develop a machine learning model that can predict the class of the car based on the features of the car with accuracy as high as possible. 
-
-Using the randomForest model my recommendation algorithm is able to predict the class from the unknown validation dataset with an accuracy of 0.9595.  
+Using the randomForest model my recommendation algorithm was able to predict the class from the unknown validation dataset with an accuracy of 0.9595.  
 
 ## About Car-Evaluation DataSet 
 The car evaluation dataset contains 1727 instances with one outcome and six features:
-outcome
+
+Outcome
+
 -    class: represents unacc, acc, good, vgood.
 
-features
+Features
+
 -   buying: represents vhigh, high, med, low.
 -   maint: vhigh, high, med, low.
 -   doors: 2, 3, 4, 5more.
@@ -34,6 +36,7 @@ features
 
 # Method
 To develop the recommender system I performed the following tasks:
+
 -    Installing the required packages.
 -    Download the car dataset. 
 -    Organize the car dataset.
@@ -161,6 +164,7 @@ head(validation)
 ``` 
 ## 6.1 Partitioning of validation data 
 validation data was split into 50% vtest_set, and 50% validation_test set: 
+
 -   vtest_set has integers. 
 -   validation_test has characters. 
  
@@ -229,11 +233,13 @@ accmat
 
 ## 7.2 K Nearest Neighbor (KNN) Model 
 KNN is a non-parametric Supervised Learning Model that uses input features to predict the outcome. It is based on the similarity of the features. Knn algorithm stores k features with nearest neighbors and classifies new cases by majority vote of its k neighbors.KNN works with factors.   
-Since the data points are in single digit, i did not normalize the data. 
+Since the data points are in single digit, I did not normalize the data. 
 KNN model that works:
--    Without caret package and with specific value of k such as as the square root of number of features in the training sample.
--  With caret package and tuning parameters.
 
+-    Without caret package and with specific value of k such as as the square root      of number of features in the training sample.
+
+-  With caret package and tuning parameters.
+ 
 ```{r chunk_8, message = FALSE, warning = FALSE, eval = TRUE} 
 cardat_copy<-dl.copy 
 cardat_mat<-data.matrix(cardat_copy) 
@@ -263,18 +269,26 @@ accmat
 ``` 
 #  Knn_Model with caret package to tuning parameter 
 ```{r chunk_9, message=FALSE, warning=FALSE} 
-train_knn<-train(class_pred_train,class_outcome_train, method="knn",tuneGrid=data.frame(k=seq(1, sqrt(sample_size),1))) 
-k<-train_knn$bestTune 
-class_pred_knn<-knn(train=class_pred_train,test=class_pred_test,cl=class_outcome_train, k) 
+library(caret)
+train_knn<-train(class_pred_train,class_outcome_train, method = "knn",preProcess =c("center","scale"))
+train_knn
+k<-train_knn$bestTune
+class_pred_knn<-knn(train=class_pred_train,test=class_pred_test,cl=class_outcome_train, k)
 #Model Evaluation 
 accuracy_with_caret<-confusionMatrix(class_pred_knn,factor(class_outcome_test))$overall["Accuracy"] 
-k
+
 accuracy_with_caret 
 accmat<-table("pred" = class_pred_knn, "class_labels" = factor(class_outcome_test))
 accmat
 ``` 
  # Random Forrest Model 
-Random Forest is a very popular Machine Learning Model because it provides good efficiency with both numerical and categorical data. Algorithm divides the data into sub-samples, and then on each sub-sample fits a decision tree. It takes the averaging of outcomes of various decision trees to predict the final outcome. 
+Random Forest is a very popular Machine Learning Model because:
+
+-   It provides good efficiency with both numerical and categorical data.
+
+-   Algorithm divides the data into sub-samples, and then on each sub-sample fits     a decision tree.
+
+-   It takes the averaging of outcomes of various decision trees to predict the       final outcome. 
 ```{r chunk_10, warning=FALSE, message=FALSE} 
 if(!require(randomForest)) install.packages("randomForest", repos = "http://cran.us.r-project.org") 
 library(caret) 
@@ -309,7 +323,7 @@ percent_accuracy
 ```
 
 # 9. Conclusion & Future Work
-Multinomial logistic model provides the least accuracy of around 67% while the Random Forest Model provides the greatest accuracy of around 96%. 
+Multinomial logistic model provides the least accuracy of around 64% while the Random Forest Model provides the greatest accuracy of around 96%. 
 I will implement Support Vector Machines(SVMs) in R to see if the accuracy more than 96% can be achieved. 
  
 
